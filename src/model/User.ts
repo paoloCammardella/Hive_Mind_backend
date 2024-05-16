@@ -6,6 +6,7 @@ export interface UserInterface {
   firstName: string,
   lastName: string,
   username: string,
+  email: String,
   salt: string,
   passwordHash: string,
   createdAt: Date,
@@ -26,10 +27,15 @@ const userSchema = new Schema<UserInterface>({
     unique: true,
     require: true
   },
+  email: {
+    type: String,
+    required: true,
+    lowercase: true
+  },
   salt: {
     type: String,
     required: true
-  }, 
+  },
   passwordHash: {
     type: String,
     required: true
