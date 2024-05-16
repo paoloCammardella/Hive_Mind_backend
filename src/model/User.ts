@@ -25,41 +25,52 @@ const userSchema = new Schema<UserInterface>({
   username: {
     type: String,
     unique: true,
-    require: true
+    // validate:{
+    //   validator: v:number => v%2 === 0;
+    // },
+    required: true
   },
   email: {
     type: String,
     required: true,
+    unique: true,
     lowercase: true
   },
   salt: {
-    type: String,
-    required: true
+    type: String
   },
   passwordHash: {
     type: String,
     required: true
   },
-  createdAt: Date,
-  updatedAt: Date
+  createdAt: {
+    type: Date,
+    immutable: true,
+    default: () => Date.now()
+  },
+  updatedAt: {
+    type: Date,
+    default: () => Date.now()
+  }
 }, { collection: "users" })
 
-// userSchema.pre("save", function(value){
-//   const user = this as UserInterface;
-//   user.passwordHash = bcrypt.genSalt(16).then((salt) => {
-//         this.salt = salt;
-//         return bcrypt.hash(value, salt);
-//       });
-// })
+//TODO probabilmente devo farlo solo nell'onCreate o al cambio password
+userSchema.pre("save", function (next) {
+  bcrypt.genSalt(16).then(async (salt) => {
+    this.salt = salt;
+    this.passwordHash = await bcrypt.hash(this.passwordHash, salt);
+    this.updatedAt = new Date(Date.now());
+    next()
+  }).catch((err) => next(err));
+})
+
 
 userSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
-  const user = this as UserInterface; // Bind 'this' to the user document
-
   try {
-    const match = await bcrypt.compare(candidatePassword, user.passwordHash);
+    const match = await bcrypt.compare(candidatePassword, this.passwordHash);
     return match;
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error.message);
   }
 };
 

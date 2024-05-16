@@ -16,9 +16,13 @@ const start = async () => {
   }).catch((err) => {
     console.error("Error with database synchronization: " + err.message);
   });
-  let user = new User({ firstName: "Ciaone", lastName: "Ciaone", salt: "Ciaone", passwordHash: "Ciaone", username: "Ciaone" });
-  let idea = new Idea({text:"dmadmw", title:"titolo", user: "user"});
-  idea.save();
-  // user.save();
+  let user = new User({ firstName: "Ciaone", lastName: "Ciaone", email: "email", passwordHash: "Ciaone", username: "ciaoette" });
+  // let idea = new Idea({text:"dmadmw", title:"titolo", user: "user"});
+  // idea.save();
+  try {
+    user.save();
+  } catch (e) {
+    console.log("Error while saving a new user");
+  }
 }
 start();
