@@ -2,13 +2,13 @@ import mongoose from "mongoose";
 import morgan from "morgan";
 import cors from "cors"
 import express from "express"
-import swaggerUi from 'swagger-ui-express';
+import swaggerUi, { serve } from 'swagger-ui-express';
 
 
 import { mongo, server } from "./utils/config";
 import User, { comparePassword } from "./model/User";
 import { authenticationRouter } from "./router/authenticationRouter";
-import specs from "./utils/swagger";
+import swaggerDocs from "./utils/swagger";
 import { spec } from "node:test/reporters";
 
 const app = express();
@@ -22,11 +22,6 @@ app.use(cors()); //API will be accessible from anywhere. We'll talk about this i
 //permette di deserializzare il json delle richieste
 app.use(express.json());
 
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(specs)
-);
 
 //using the routers
 app.use(authenticationRouter)
@@ -42,6 +37,7 @@ const start = async () => {
   await mongoose.connect(mongo.MONGO_CONNECTION).then(() => {
     console.log("Database synced correctly");
     app.listen(PORT, () => {
+      swaggerDocs(app, parseInt(server.SERVER_PORT));
       console.log(`Server is running on port: ${PORT}`);
     });
   }).catch((err) => {
