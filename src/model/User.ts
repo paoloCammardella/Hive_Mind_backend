@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import mongoose, { Schema, Document, Model } from "mongoose";
+import mongoose, { Schema, Model } from "mongoose";
 mongoose.set('strictQuery', false);
 
 export interface UserInterface {
@@ -7,6 +7,11 @@ export interface UserInterface {
   lastName: string,
   username: string,
   email: string,
+  password: string
+}
+
+export type UserAuth = {
+  username: string, 
   password: string
 }
 

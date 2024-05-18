@@ -1,24 +1,13 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { AuthenticationController } from '../Controller/authenticationController';
-import { UserInterface } from '../model/User';
 
 export const authenticationRouter = Router();
-
-// authenticationRouter.post("/auth", async (req, res) => {
-//   let isAuthenticated = await AuthenticationController.checkCredentials(req, res);
-//   if(isAuthenticated){
-//     res.json(AuthenticationController.issueToken(req.body.usr));
-//   } else {
-//     res.status(401);
-//     res.json( {error: "Invalid credentials. Try again."});
-//   }
-// });
 
 /**
  * @swagger
  * /auth:
  *   post:
- *     summary: Autentica un utente
+ *     summary: Authenticate existing user
  *     tags: [Authentication]
  *     requestBody:
  *       required: true
@@ -33,49 +22,24 @@ export const authenticationRouter = Router();
  *                 type: string
  *     responses:
  *       '200':
- *         description: Utente autenticato con successo
+ *         description: User authenticated succesfully.
  *       '401':
- *         description: Credenziali non valide
+ *         description: Invalid credentials, try again
  */
-authenticationRouter.post("/auth", async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    // Implementazione della logica di autenticazione qui
-  } catch (err) {
-    next({ status: 500, message: "Errore durante l'autenticazione dell'utente" });
+authenticationRouter.post("/auth", async (req: Request, res: Response) => {
+  let isAuthenticated = await AuthenticationController.checkCredentials(req, res);
+  if(isAuthenticated){
+    res.json(AuthenticationController.issueToken(req.body.usr));
+  } else {
+    res.status(401);
+    res.json( {error: "Invalid credentials. Try again."});
   }
 });
-
-/**
- * @swagger
- * /signup:
- *   post:
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               logo:
- *                 type: string
- *     summary: Crea una tshirt
- *     responses:
- *       200:
- *         description: Descrizione tshirt
- *       418:
- *         description: Nessun logo mandato
- */
 /**
  * @openapi
  * /signup:
  *   post:
- *     summary: Crea un nuovo utente
+ *     summary: Create a new user.
  *     tags: [Authentication]
  *     requestBody:
  *       required: true
@@ -96,23 +60,14 @@ authenticationRouter.post("/auth", async (req: Request, res: Response, next: Nex
  *                 type: string
  *     responses:
  *       '200':
- *         description: Utente creato con successo
+ *         description: User created succesfully.
  *       '500':
- *         description: Credenziali non valide, qualcosa è andato storto, impossibile salvare l'utente
+ *         description: Invalid credentials, cannot create user.
  */
 authenticationRouter.post("/signup", async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const userData:UserInterface = {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password
-    };
-    const user = await AuthenticationController.saveUser(userData, res);
+  AuthenticationController.saveUser(req, res).then((user) => {
     res.json(user);
-  } catch (err) {
-    next({ status: 500, message: "Could not save user" });
-  }
-  res.send("Could not save user, make sure to fill every field");
+  }).catch((err) => {
+    next({ status: 500, message: err });
+  });
 });

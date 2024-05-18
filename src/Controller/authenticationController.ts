@@ -1,5 +1,5 @@
-import User, { comparePassword, UserInterface } from "../model/User";
-import {Response} from 'express'
+import User, { comparePassword, UserAuth, UserInterface } from "../model/User";
+import { Request, Response } from 'express'
 import JWT, { VerifyOptions } from 'jsonwebtoken';
 
 
@@ -9,49 +9,39 @@ export class AuthenticationController {
    * @param {http.IncomingMessage} request 
    * @param {http.ServerResponse} response 
    */
-  static async checkCredentials(req: UserInterface, res: Response) {
-    try {
-      const { username, password } = req;
-  
-      const user = await User.findOne({ username: username });
-  
-      if (!user) {
+  static async checkCredentials(req: Request, res: Response) {
+    let user: UserAuth = {
+      username: req.body.username,
+      password: req.body.password
+    }
+      const userFound: UserAuth = await User.findOne({ username: user.username });
+
+      if (!userFound) {
         return res.status(401).json({ error: "Invalid credentials" });
       }
-  
-      const isPasswordValid = await comparePassword(password, user.password);
+      const isPasswordValid = await comparePassword(user.password, userFound.password);
       if (!isPasswordValid) {
         return res.status(401).json({ error: "Invalid credentials" });
       }
-  
-      res.status(200).json({ message: "User authenticated successfully" });
-    } catch (error) {
-      console.error("Error checking credentials:", error);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  }
-  
-  /**
-   * Attempts to create a new User
-   */
-  static async saveUser(userData: UserInterface, res: Response){
-    const user = new User(userData);
-    
-    try {
-      await user.save();
-    } catch(err) {
-      console.error("An error occurred while trying to create the user: ", err);
-  
-    }
-  
-    return user;
+      return userFound !== null;
   }
 
-  static issueToken(username: string){
-    return JWT.sign({user:username}, process.env.TOKEN_SECRET, {expiresIn: `${24*60*60}s`});
+  static async saveUser(req: Request, res: Response) {
+    let user = new User({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password
+    });
+    return user.save();
   }
 
-  static isTokenValid(token: string, callback: VerifyOptions){
+  static issueToken(username: string) {
+    return JWT.sign({ user: username }, process.env.TOKEN_SECRET, { expiresIn: `${24 * 60 * 60}s` });
+  }
+
+  static isTokenValid(token: string, callback: VerifyOptions) {
     JWT.verify(token, process.env.TOKEN_SECRET, callback);
   }
 }

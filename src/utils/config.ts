@@ -19,6 +19,6 @@ export const mongo = {
 }
 
 export const server = {
-  SERVER_HOSTNAME: process.env.SERVER_HOSTNAME,
+  SERVER_HOSTNAME: process.env.HOST,
   SERVER_PORT: process.env.PORT
 }

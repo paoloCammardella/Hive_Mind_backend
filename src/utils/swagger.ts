@@ -8,7 +8,8 @@ const options: swaggerJSDoc.Options = {
   definition: {
     openapi: '3.0.0',
     info:{
-      title: 'Hive Mind API',
+        title: 'Hive Mind API',
+        description:"Hive Mind API ",
       version
     },
     components:{
@@ -42,7 +43,7 @@ function swaggerDocs(app: Express, port: number){
     res.send(specs);
   });
 
-  console.info(`Docs available at http://${server.SERVER_HOSTNAME}:${server.SERVER_PORT}`);
+  console.info(`Docs available at http://${server.SERVER_HOSTNAME}:${server.SERVER_PORT}/docs`);
 }
 
 export default swaggerDocs;

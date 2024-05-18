@@ -1,9 +1,20 @@
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
 import User from "./User";
+mongoose.set('strictQuery', false);
+
+
+export interface IdeaInterface {
+  title: string,
+  text: string,
+  upvote: number,
+  downvote: number,
+  date: Date
+}
 
 const ideaSchema = new mongoose.Schema({
   title: {
     type: String,
+    minLength: 1,
     maxLength: 50,
     required: true
   },
@@ -13,6 +24,14 @@ const ideaSchema = new mongoose.Schema({
     maxLength: 400,
     required: true
   },
+  upvote: {
+    type: Number,
+    min: 0
+  },
+  downvote: {
+    type: Number,
+    min: 0
+  },
   date: {
     type: Date,
     immutable: true,
@@ -20,9 +39,19 @@ const ideaSchema = new mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.ObjectId,
+    immutable: true,
     required: true
+  },
+  createdAt: {
+    type: Date,
+    immutable: true,
+    default: () => Date.now()
+  },
+  updatedAt: {
+    type: Date,
+    default: () => Date.now()
   }
 }, { collection: "ideas" });
 
-const Idea = mongoose.model("ideas", ideaSchema);
+const Idea: Model<IdeaInterface> = mongoose.model<IdeaInterface>("ideas", ideaSchema);
 export default Idea;
