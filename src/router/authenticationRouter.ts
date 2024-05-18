@@ -72,7 +72,7 @@ authenticationRouter.post("/auth", async (req: Request, res: Response, next: Nex
  *         description: Nessun logo mandato
  */
 /**
- * @swagger
+ * @openapi
  * /signup:
  *   post:
  *     summary: Crea un nuovo utente
