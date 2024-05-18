@@ -1,11 +1,42 @@
 import mongoose from "mongoose";
-import { mongo, server } from "./utils/config";
+import morgan from "morgan";
+import cors from "cors"
 import express from "express"
-import User from "./model/User";
-import Idea from "./model/Idea";
+import swaggerUi from 'swagger-ui-express';
+
+
+import { mongo, server } from "./utils/config";
+import User, { comparePassword } from "./model/User";
+import { authenticationRouter } from "./router/authenticationRouter";
+import specs from "./utils/swagger";
+import { spec } from "node:test/reporters";
 
 const app = express();
 const PORT = server.SERVER_PORT
+
+// Register the morgan logging middleware, use the 'dev' format
+app.use(morgan('dev'));
+
+app.use(cors()); //API will be accessible from anywhere. We'll talk about this in Lecture 23!
+
+//permette di deserializzare il json delle richieste
+app.use(express.json());
+
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs)
+);
+
+//using the routers
+app.use(authenticationRouter)
+
+app.get("/", (req, res) => {
+  res.send("Benvenuto a Hive Mind!"); // Aggiungi qui il contenuto che desideri visualizzare sulla rotta principale
+});
+
+
+
 
 const start = async () => {
   await mongoose.connect(mongo.MONGO_CONNECTION).then(() => {
@@ -16,13 +47,28 @@ const start = async () => {
   }).catch((err) => {
     console.error("Error with database synchronization: " + err.message);
   });
-  let user = new User({ firstName: "Ciaone", lastName: "Ciaone", email: "email", passwordHash: "Ciaone", username: "ciaoette" });
-  // let idea = new Idea({text:"dmadmw", title:"titolo", user: "user"});
-  // idea.save();
+// let user = new User({username: "paolo", firstName: "paolo", lastName: "cammardella", email:"paolo", password:"password"})
+// await user.save();
   try {
-    user.save();
-  } catch (e) {
+    const oldUser = await User.findOne({ username: 'paolo' }).exec();
+    if (oldUser) {
+      oldUser.password = "come va";
+      // await oldUser.save();
+
+      try {
+        if (await comparePassword(" va", oldUser.password)) {
+          console.log("Le password corrispondono\n" + oldUser);
+        }else{
+          console.error("Password didn't match");
+        }
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    }else{console.error("Unable to find user")}
+  } catch (err) {
     console.log("Error while saving a new user");
+    console.log(err);
   }
-}
+};
+
 start();

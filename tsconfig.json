@@ -6,6 +6,9 @@
     "noImplicitAny": true,
     "baseUrl": "src",
     "outDir": "dist",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+
     },
   "include": ["src/**/*"]
 }

@@ -1,19 +1,16 @@
 import bcrypt from "bcrypt";
-import mongoose, { Schema, model } from "mongoose";
+import mongoose, { Schema, Document, Model } from "mongoose";
 mongoose.set('strictQuery', false);
 
 export interface UserInterface {
   firstName: string,
   lastName: string,
   username: string,
-  email: String,
-  salt: string,
-  passwordHash: string,
-  createdAt: Date,
-  updatedAt: Date;
+  email: string,
+  password: string
 }
 
-const userSchema = new Schema<UserInterface>({
+const userSchema = new Schema({
   firstName: {
     type: String,
     required: true
@@ -25,9 +22,6 @@ const userSchema = new Schema<UserInterface>({
   username: {
     type: String,
     unique: true,
-    // validate:{
-    //   validator: v:number => v%2 === 0;
-    // },
     required: true
   },
   email: {
@@ -39,7 +33,7 @@ const userSchema = new Schema<UserInterface>({
   salt: {
     type: String
   },
-  passwordHash: {
+  password: {
     type: String,
     required: true
   },
@@ -52,27 +46,29 @@ const userSchema = new Schema<UserInterface>({
     type: Date,
     default: () => Date.now()
   }
-}, { collection: "users" })
+}, { collection: "users" });
 
-//TODO probabilmente devo farlo solo nell'onCreate o al cambio password
 userSchema.pre("save", function (next) {
-  bcrypt.genSalt(16).then(async (salt) => {
-    this.salt = salt;
-    this.passwordHash = await bcrypt.hash(this.passwordHash, salt);
-    this.updatedAt = new Date(Date.now());
-    next()
-  }).catch((err) => next(err));
-})
+  if (this.password && this.isModified('password')) {
+    bcrypt.genSalt(12).then(async (salt) => {
+      this.salt = salt;
+      this.password = await bcrypt.hash(this.password, salt);
+      this.updatedAt = new Date(Date.now());
+      next();
+    }).catch((err) => next(err));
+  } else {
+    next();
+  }
+});
 
-
-userSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
+export async function comparePassword(async: string, userPassword: string): Promise<boolean> {
   try {
-    const match = await bcrypt.compare(candidatePassword, this.passwordHash);
+    const match = await bcrypt.compare(async, userPassword);
     return match;
   } catch (error) {
     throw new Error(error.message);
   }
 };
 
-const User = model("users", userSchema);
+const User: Model<UserInterface> = mongoose.model<UserInterface>("User", userSchema);
 export default User;
