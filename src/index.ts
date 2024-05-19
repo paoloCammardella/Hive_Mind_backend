@@ -7,6 +7,7 @@ import { mongo, server } from "./utils/config";
 import { authenticationRouter } from "./router/authenticationRouter";
 import swaggerDocs from "./utils/swagger";
 import { ideaRouter } from "./router/ideaRouter";
+import { userRouter } from "./router/userRouter";
 
 const app = express();
 const PORT = server.SERVER_PORT
@@ -23,6 +24,7 @@ app.use(express.json());
 //using the routers
 app.use(authenticationRouter);
 app.use('/idea', ideaRouter);
+app.use('/user', userRouter);
 
 app.get("/", (req, res) => {
   res.send("Benvenuto a Hive Mind!");

@@ -1,5 +1,4 @@
 import mongoose, { Model } from "mongoose";
-import User from "./User";
 mongoose.set('strictQuery', false);
 
 
@@ -38,7 +37,7 @@ const ideaSchema = new mongoose.Schema({
     default: Date.now()
   },
   user: {
-    type: mongoose.Schema.ObjectId,
+    type: String,
     immutable: true,
     required: true
   },

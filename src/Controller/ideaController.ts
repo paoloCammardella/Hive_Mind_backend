@@ -1,14 +1,30 @@
 import { Request, Response } from 'express'
-import { AuthenticationController } from "./authenticationController";
 import Idea from "../model/Idea";
+import User from '../model/User';
 
 export class ideaController {
+  
+  static async postNewIdea(req: Request, res: Response) {
+    let user = await User.findOne({ username: req.body.username});
+    if (user) {
+      let idea = new Idea({
+        title: req.body.title,
+        text: req.body.text,
+        user: req.body.username
+      });
+      return await idea.save();
+    }
+  }
 
   static async getIdeas() {
     return await Idea.find({}).sort([['date', -1]]);
   }
 
-  static async getControverisalIdeas(){
+  static async getIdeasByUsername(username: string){
+    return await Idea.find({user: username});
+  }
+
+  static async getControverisalIdeas() {
     return await Idea.aggregate([
       {
         $match: {
@@ -23,7 +39,7 @@ export class ideaController {
     ])
   }
 
-  static async getPopularIdeas(){
+  static async getPopularIdeas() {
     return await Idea.aggregate([
       {
         $match: {
@@ -38,7 +54,7 @@ export class ideaController {
     ])
   }
 
-  static async getUnpopularIdeas(){
+  static async getUnpopularIdeas() {
     return await Idea.aggregate([
       {
         $match: {
