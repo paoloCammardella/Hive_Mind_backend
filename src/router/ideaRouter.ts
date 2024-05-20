@@ -3,9 +3,6 @@ import { ideaController } from '../Controller/ideaController';
 import { IdeaInterface } from 'model/Idea';
 
 export const ideaRouter = Router();
-
-//TODO check authentication.
-
 /**
  * @swagger
  * /idea:

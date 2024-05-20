@@ -38,7 +38,11 @@ export class AuthenticationController {
   }
 
   static issueToken(username: string) {
-    return JWT.sign({ user: username }, process.env.TOKEN_SECRET, { expiresIn: `${24 * 60 * 60}s` });
+    return JWT.sign(
+      { user: username }, 
+      process.env.TOKEN_SECRET as string, 
+      { expiresIn: '24h' }
+    );
   }
 
   static isTokenValid(token: string, callback: VerifyOptions) {

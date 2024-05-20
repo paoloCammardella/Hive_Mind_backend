@@ -35,6 +35,7 @@ authenticationRouter.post("/auth", async (req: Request, res: Response) => {
     res.json( {error: "Invalid credentials. Try again."});
   }
 });
+
 /**
  * @openapi
  * /signup:

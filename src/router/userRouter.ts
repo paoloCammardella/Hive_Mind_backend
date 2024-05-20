@@ -60,3 +60,7 @@ userRouter.get('/ideas', (req: Request, res: Response) => {
         res.status(500).send(`Internal server error: ${error}.`);
     });
 });
+
+userRouter.post('/like/idea', checkLikePermission(), (req: Request, res: Response) => {
+
+});
