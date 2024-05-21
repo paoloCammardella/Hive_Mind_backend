@@ -31,11 +31,6 @@ const ideaSchema = new mongoose.Schema({
     type: Number,
     min: 0
   },
-  date: {
-    type: Date,
-    immutable: true,
-    default: Date.now()
-  },
   user: {
     type: String,
     immutable: true,

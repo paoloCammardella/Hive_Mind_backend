@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { ideaController } from '../Controller/ideaController';
-import { IdeaInterface } from 'model/Idea';
+import { IdeaInterface } from '../model/Idea';
+import { likeController } from '../Controller/likeController';
 
 export const userRouter = Router();
 /**
@@ -9,7 +10,7 @@ export const userRouter = Router();
  *   /user/ideas:
  *     get:
  *       tags:
- *         - user
+ *         - User
  *       summary: Get user ideas
  *       description: Retrieves a list of ideas associated with a specific user identified by ID.
  *       parameters:
@@ -61,6 +62,82 @@ userRouter.get('/ideas', (req: Request, res: Response) => {
     });
 });
 
-userRouter.post('/like/idea', checkLikePermission(), (req: Request, res: Response) => {
-
+/**
+ * @swagger
+ * paths:
+ *   /like/idea:
+ *     post:
+ *       tags:
+ *         - User
+ *       summary: Like an idea
+ *       description: Endpoint to like an idea.
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 ideaId:
+ *                   type: string
+ *                   description: The ID of the idea to be liked.
+ *                   example: '12345'
+ *                 userId:
+ *                   type: string
+ *                   description: The ID of the user liking the idea.
+ *                   example: '67890'
+ *                 upvote:
+ *                   type: boolean
+ *                   example: true
+ *                 downvote:
+ *                   type: boolean
+ *                   example: false
+ *       responses:
+ *         '200':
+ *           description: Successful operation
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   idea:
+ *                     type: object
+ *                     description: The updated user object with the liked idea.
+ *                     properties:
+ *                       user_id:
+ *                         type: string
+ *                         description: The ID of the user.
+ *                         example: '67890'
+ *                       idea_id:
+ *                         type: string
+ *                         description: The ID of the idea.
+ *                         example: '67890'
+ *                       upvote:
+ *                         type: boolean
+ *                         example: true
+ *                       downvote:
+ *                         type: boolean
+ *                         example: false
+ *         '500':
+ *           description: Internal server error
+ *           content:
+ *             text/plain:
+ *               schema:
+ *                 type: string
+ *                 example: Internal server error:.
+ *       security:
+ *         - bearerAuth: []
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+userRouter.post('/like/idea', (req: Request, res: Response) => {
+    likeController.likeIdea(req).then(idea => {
+        res.status(200).json(idea);
+    }).catch(err => {
+        res.status(500).send(`Internal server error: ${err}`);
+    });
 });

@@ -8,7 +8,7 @@ import { authenticationRouter } from "./router/authenticationRouter";
 import swaggerDocs from "./utils/swagger";
 import { ideaRouter } from "./router/ideaRouter";
 import { userRouter } from "./router/userRouter";
-import { verifyToken } from "middleware/authenticationMiddleware";
+import { verifyToken } from "./middleware/authenticationMiddleware";
 
 const app = express();
 const PORT = server.SERVER_PORT
@@ -23,7 +23,7 @@ app.use(express.json());
 
 
 //using the routers
-app.use(verifyToken, authenticationRouter);
+app.use(authenticationRouter);
 app.use('/idea', verifyToken, ideaRouter);
 app.use('/user', verifyToken, userRouter);
 

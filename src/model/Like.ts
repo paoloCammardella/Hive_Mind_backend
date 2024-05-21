@@ -1,14 +1,20 @@
 import mongoose from "mongoose";
-import Idea from "./Idea";
-import User from "./User";
+
+export interface LikeInterface{
+  user_id: string,
+  idea_id: string,
+  upvote: boolean,
+  downvote: boolean
+}
+
 
 const likeSchema = new mongoose.Schema({
-  user:{
-    type: User,
+  user_id:{
+    type: String,
     required: true
   },
-  idea:{
-    type: Idea,
+  idea_id:{
+    type: String,
     required: true
   },
   upVote:{
