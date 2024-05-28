@@ -123,18 +123,21 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Paolo Cammardella - [@paulBaoLuo](https://twitter.com/paulBaoLuo)
 
-Back-End: [https://github.com/paoloCammardella/Hive_Mind_backend.git](https://github.com/paoloCammardella/Hive_Mind_backend.git)
-Front-end:
+Back-End: [Hive Mind back-end](https://github.com/paoloCammardella/Hive_Mind_backend.git)
+
+Front-end: [Hive Mind front-end](https://github.com/paoloCammardella/Hive_Mind_backend.git)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
 <!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
+## What I would do next?
 
-* []()
-* []()
+* #### Implementing comments:
+  Comments are a key factor while discussing Ideas, they can help people change their Idea or make it better.
+* #### Adding friends:
+  With the ability to add friends, 
 * []()
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
