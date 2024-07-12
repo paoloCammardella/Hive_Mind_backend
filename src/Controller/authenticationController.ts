@@ -1,4 +1,4 @@
-import User, { comparePassword, UserAuth, UserInterface } from "../model/User";
+import User, { comparePassword, UserAuth } from "../model/User";
 import { Request, Response } from 'express'
 import JWT, { VerifyOptions } from 'jsonwebtoken';
 
@@ -47,5 +47,9 @@ export class AuthenticationController {
 
   static isTokenValid(token: string, callback: VerifyOptions) {
     JWT.verify(token, process.env.TOKEN_SECRET, callback);
+  }
+
+  static async getUser(){
+    return User.find();
   }
 }

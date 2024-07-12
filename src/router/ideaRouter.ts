@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { ideaController } from '../Controller/ideaController';
+import { IdeaController } from '../Controller/ideaController';
 import { IdeaInterface } from 'model/Idea';
 
 export const ideaRouter = Router();
@@ -37,7 +37,7 @@ export const ideaRouter = Router();
  *         description: Internal server error.
  */
 ideaRouter.post('', (req: Request, res: Response) => {
-  ideaController.postNewIdea(req, res).then((idea: IdeaInterface) => {
+  IdeaController.postNewIdea(req, res).then((idea: IdeaInterface) => {
     if(idea){
       return res.status(200).send("Idea succesdfully created.");
     }
@@ -62,7 +62,7 @@ ideaRouter.post('', (req: Request, res: Response) => {
  *         description: Internal server
  */
 ideaRouter.get('', (req: Request, res: Response) => {
-  ideaController.getIdeas().then((ideas: IdeaInterface[]) => {
+  IdeaController.getIdeas().then((ideas: IdeaInterface[]) => {
     if (!ideas || ideas.length === 0) {
       return res.status(404).json({ error: 'No ideas found' });
     }
@@ -90,7 +90,7 @@ ideaRouter.get('', (req: Request, res: Response) => {
  *         description: Internal server.
  */
 ideaRouter.get('/controversial', (req: Request, res: Response) => {
-  ideaController.getControverisalIdeas().then((ideas: IdeaInterface[]) => {
+  IdeaController.getControverisalIdeas().then((ideas: IdeaInterface[]) => {
     if (!ideas || ideas.length === 0) {
       return res.status(404).json({ error: 'No controversial ideas found.' });
     }
@@ -119,7 +119,7 @@ ideaRouter.get('/controversial', (req: Request, res: Response) => {
  *         description: Internal server.
  */
 ideaRouter.get('/popular', (req: Request, res: Response) => {
-  ideaController.getPopularIdeas().then((ideas: IdeaInterface[]) => {
+  IdeaController.getPopularIdeas().then((ideas: IdeaInterface[]) => {
     if (!ideas || ideas.length === 0) {
       return res.status(404).json({ error: 'No popular ideas found.' });
     }
@@ -147,7 +147,7 @@ ideaRouter.get('/popular', (req: Request, res: Response) => {
  *         description: Internal server.
  */
 ideaRouter.get('/unpopular', (req: Request, res: Response) => {
-  ideaController.getUnpopularIdeas().then((ideas: IdeaInterface[]) => {
+  IdeaController.getUnpopularIdeas().then((ideas: IdeaInterface[]) => {
     if (!ideas || ideas.length === 0) {
       return res.status(404).json({ error: 'No unpopular ideas found.' });
     }

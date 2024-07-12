@@ -27,11 +27,12 @@ export const authenticationRouter = Router();
  *         description: Invalid credentials, try again
  */
 authenticationRouter.post("/auth", async (req: Request, res: Response) => {
+
   let isAuthenticated = await AuthenticationController.checkCredentials(req, res);
-  if(isAuthenticated){
+  if (isAuthenticated) {
     res.json(AuthenticationController.issueToken(req.body.username));
   } else {
-    res.status(401).json( {error: "Invalid credentials. Try again."});
+    res.status(401).json({ error: "Invalid credentials. Try again." });
   }
 });
 
@@ -68,6 +69,7 @@ authenticationRouter.post("/signup", async (req: Request, res: Response, next: N
   AuthenticationController.saveUser(req, res).then((user) => {
     res.json(user);
   }).catch((err) => {
+    console.log(err);
     res.status(500).send(err);
   });
 });

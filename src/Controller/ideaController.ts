@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import Idea from "../model/Idea";
 import User from '../model/User';
 
-export class ideaController {
+export class IdeaController {
   
   static async postNewIdea(req: Request, res: Response) {
     let user = await User.findOne({ username: req.body.username});

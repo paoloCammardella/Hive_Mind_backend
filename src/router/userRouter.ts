@@ -1,7 +1,8 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { ideaController } from '../Controller/ideaController';
+import { Router, Request, Response } from 'express';
+import { IdeaController } from '../Controller/ideaController';
 import { IdeaInterface } from '../model/Idea';
-import { likeController } from '../Controller/likeController';
+import { LikeController } from '../Controller/likeController';
+import { AuthenticationController } from '../Controller/authenticationController';
 
 export const userRouter = Router();
 /**
@@ -46,11 +47,11 @@ export const userRouter = Router();
 */
 userRouter.get('/ideas', (req: Request, res: Response) => {
     const username: string = req.query.username as string;
-    if(!username){
+    if (!username) {
         return res.status(400).send("Bad Request");
     }
 
-    ideaController.getIdeasByUsername(username).then((userIdeas: IdeaInterface[]) => {
+    IdeaController.getIdeasByUsername(username).then((userIdeas: IdeaInterface[]) => {
         if (userIdeas.length > 0) {
             return res.status(200).send(`Ideas created by ${username}: ${userIdeas}`);
         }
@@ -135,9 +136,46 @@ userRouter.get('/ideas', (req: Request, res: Response) => {
  *       bearerFormat: JWT
  */
 userRouter.post('/like/idea', (req: Request, res: Response) => {
-    likeController.likeIdea(req).then(idea => {
+    LikeController.likeIdea(req).then(idea => {
         res.status(200).json(idea);
     }).catch(err => {
         res.status(500).send(`Internal server error: ${err}`);
+    });
+});
+
+/**
+ * @swagger
+ * paths:
+ *   /user:
+ *     get:
+ *       tags:
+ *         - User
+ *       summary: Get users
+ *       description: Retrieves a list of users
+ *       parameters:
+ *         
+ *       responses:
+ *         '200':
+ *           description: Successfully retrieved list of users.
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: array
+ *                 items:
+ *                   - users
+ *         '500':
+ *           description: Internal server error.
+ *           content:
+ *             text/plain:
+ *               schema:
+ *                 type: string
+ *                 example: "Internal server error: {error}."
+*/
+userRouter.get('/user', (req: Request, res: Response) => {
+
+    AuthenticationController.getUser().then(user => {
+        res.status(200).json(user);
+    }).catch((error) => {
+        res.status(500).send(`Internal server error: ${error}.`);
     });
 });

@@ -16,11 +16,13 @@ const PORT = server.SERVER_PORT
 // Register the morgan logging middleware, use the 'dev' format
 app.use(morgan('dev'));
 
-app.use(cors()); //API will be accessible from anywhere.
-
+app.use(cors({
+  origin: true,
+  credentials: true,
+  methods: 'POST,GET,PUT,OPTIONS,DELETE'
+}));
 //deserialize JSON
 app.use(express.json());
-
 
 //using the routers
 app.use(authenticationRouter);
@@ -28,7 +30,7 @@ app.use('/idea', verifyToken, ideaRouter);
 app.use('/user', verifyToken, userRouter);
 
 app.get("/", (req, res) => {
-  res.send("Benvenuto a Hive Mind!");
+  res.send("Benvenuto in Hive Mind!");
 });
 
 const start = async () => {
