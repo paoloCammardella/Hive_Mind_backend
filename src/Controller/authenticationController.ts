@@ -9,21 +9,21 @@ export class AuthenticationController {
    * @param {http.IncomingMessage} request 
    * @param {http.ServerResponse} response 
    */
-  static async checkCredentials(req: Request, res: Response) {
+  static async checkCredentials(req: Request): Promise<boolean> {
     let user: UserAuth = {
       username: req.body.username,
       password: req.body.password
-    }
-      const userFound: UserAuth = await User.findOne({ username: user.username });
+    };
+    const userFound: UserAuth = await User.findOne({ username: user.username });
 
-      if (!userFound) {
-        return res.status(401).json({ error: "Invalid credentials" });
-      }
-      const isPasswordValid = await comparePassword(user.password, userFound.password);
-      if (!isPasswordValid) {
-        return res.status(401).json({ error: "Invalid credentials" });
-      }
-      return userFound !== null;
+    if (!userFound) {
+      return false;
+    }
+    const isPasswordValid = await comparePassword(user.password, userFound.password);
+    if (!isPasswordValid) {
+      return false;
+    }
+    return true;
   }
 
   static async saveUser(req: Request, res: Response) {

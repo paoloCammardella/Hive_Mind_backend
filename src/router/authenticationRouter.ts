@@ -28,7 +28,7 @@ export const authenticationRouter = Router();
  */
 authenticationRouter.post("/auth", async (req: Request, res: Response) => {
 
-  let isAuthenticated = await AuthenticationController.checkCredentials(req, res);
+  let isAuthenticated = await AuthenticationController.checkCredentials(req);
   if (isAuthenticated) {
     res.json(AuthenticationController.issueToken(req.body.username));
   } else {

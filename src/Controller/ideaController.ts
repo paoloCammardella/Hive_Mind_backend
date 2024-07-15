@@ -5,15 +5,16 @@ import User from '../model/User';
 export class IdeaController {
   
   static async postNewIdea(req: Request, res: Response) {
-    let user = await User.findOne({ username: req.body.username});
+    let user = await User.findOne({ username: req.body.user});
     if (user) {
       let idea = new Idea({
         title: req.body.title,
         text: req.body.text,
-        user: req.body.username
+        user: req.body.user
       });
       return await idea.save();
     }
+    throw new Error('No user found');
   }
 
   static async getIdeas() {
