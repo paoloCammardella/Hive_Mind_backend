@@ -10,7 +10,9 @@ export class IdeaController {
       let idea = new Idea({
         title: req.body.title,
         text: req.body.text,
-        user: req.body.user
+        user: req.body.user,
+        downvote: 0,
+        upvote: 0
       });
       return await idea.save();
     }

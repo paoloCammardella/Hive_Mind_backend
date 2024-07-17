@@ -15,7 +15,7 @@ export const mongo = {
   MONGO_DATABASE,
   MONGO_USER,
   MONGO_PASSWORD,
-  MONGO_CONNECTION: `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_URL}/${MONGO_DATABASE}?authSource=admin`
+  MONGO_CONNECTION: `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_URL}?authMechanism=DEFAULT`
 }
 
 export const server = {

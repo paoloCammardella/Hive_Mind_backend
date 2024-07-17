@@ -39,12 +39,10 @@ export const ideaRouter = Router();
 ideaRouter.post('', (req: Request, res: Response) => {
   IdeaController.postNewIdea(req, res).then((idea: IdeaInterface) => {
     if(idea){
-      return res.status(200).json({
-        "message" : "Idea succesfully created."
-      });
+      return res.status(201).json({'message' : 'OK'});
     }
     return res.status(400).json({
-      "message" : `Bad request.`
+      "message" : `Bad request, no idea sent.`
     });
   }).catch((error)=>{
     console.log(error);
