@@ -9,7 +9,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/paoloCammardella/Hive_Mind_backend.git">
-    <img src="/images/logo.png" alt="Logo" width="300" height="300">
+    <img src="src/images/logo.svg" alt="Logo" width="300" height="300">
   </a>
 
 <h3 align="center">Hive Mind</h3>
