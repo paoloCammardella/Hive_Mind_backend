@@ -49,16 +49,21 @@ export class LikeController {
       // Aggiornamento atomico dei voti
       if (upVote) {
         if (!likedIdea.upVote) {
-          // Incrementa upvote e aggiorna il record del like
-          await Idea.updateOne(
-            { _id: objectId },
-            { $inc: { upvote: 1 } }
-          );
+          if(likedIdea.downVote){
+            likedIdea.downVote = false
+            await Idea.updateOne(
+              { _id: objectId },
+              { $inc: { upvote: 1, downvote: -1 } }
+            );
+          }else{
+            await Idea.updateOne(
+              { _id: objectId },
+              { $inc: { upvote: 1 } }
+            );
+          }
           likedIdea.upVote = true;
         } else {
-          // Decrementa upvote solo se il valore non scende sotto 0
-          const newUpvoteValue = idea.upvote - 1;
-          if (newUpvoteValue >= 0) {
+          if (idea.upvote > 0) {
             await Idea.updateOne(
               { _id: objectId },
               { $inc: { upvote: -1 } }
@@ -70,16 +75,22 @@ export class LikeController {
 
       if (downVote) {
         if (!likedIdea.downVote) {
-          // Incrementa downvote e aggiorna il record del like
-          await Idea.updateOne(
-            { _id: objectId },
-            { $inc: { downvote: 1 } }
-          );
+          if (likedIdea.upVote) {
+            likedIdea.upVote = false
+            await Idea.updateOne(
+              { _id: objectId },
+              { $inc: { downvote: 1, upvote: -1 } }
+            );
+          } else {
+            await Idea.updateOne(
+              { _id: objectId },
+              { $inc: { downvote: 1 } }
+            );
+          }
           likedIdea.downVote = true;
         } else {
           // Decrementa downvote solo se il valore non scende sotto 0
-          const newDownvoteValue = idea.downvote - 1;
-          if (newDownvoteValue >= 0) {
+          if (idea.downvote > 0) {
             await Idea.updateOne(
               { _id: objectId },
               { $inc: { downvote: -1 } }

@@ -62,7 +62,7 @@ export class IdeaController {
       {
         $match: {
           $expr: {
-            $gt: [
+            $lt: [
               { $subtract: ['$upvote', '$downvote'] },
               0
             ]
