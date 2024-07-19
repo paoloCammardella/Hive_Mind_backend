@@ -66,7 +66,7 @@ userRouter.get('/ideas', (req: Request, res: Response) => {
 /**
  * @swagger
  * paths:
- *   /like/idea:
+ *   /user/like/idea:
  *     post:
  *       tags:
  *         - User
@@ -136,13 +136,19 @@ userRouter.get('/ideas', (req: Request, res: Response) => {
  *       bearerFormat: JWT
  */
 userRouter.post('/like/idea', (req: Request, res: Response) => {
+    console.log(req.body);  // Stampa il corpo della richiesta per il debug
     LikeController.likeIdea(req).then(idea => {
-        res.status(200).json(idea);
+        if (idea) {
+            res.status(200).json(idea);
+        } else {
+            res.status(404).send('Idea not found');
+        }
+        console.log(idea);  // Stampa l'idea per il debug
     }).catch(err => {
+        console.error(`Error: ${err}`);  // Stampa l'errore per il debug
         res.status(500).send(`Internal server error: ${err}`);
     });
 });
-
 /**
  * @swagger
  * paths:
