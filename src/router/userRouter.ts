@@ -3,6 +3,7 @@ import { IdeaController } from '../Controller/ideaController';
 import { IdeaInterface } from '../model/Idea';
 import { LikeController } from '../Controller/likeController';
 import { AuthenticationController } from '../Controller/authenticationController';
+import { ensureUsersDoesntVoteOwnIdeas } from '../middleware/voteMiddleware';
 
 export const userRouter = Router();
 /**
@@ -135,20 +136,22 @@ userRouter.get('/ideas', (req: Request, res: Response) => {
  *       scheme: bearer
  *       bearerFormat: JWT
  */
-userRouter.post('/like/idea', (req: Request, res: Response) => {
-    console.log(req.body);  // Stampa il corpo della richiesta per il debug
+userRouter.post('/like/idea', ensureUsersDoesntVoteOwnIdeas, (req: Request, res: Response) => {
+    console.log(req.body);
     LikeController.likeIdea(req).then(idea => {
         if (idea) {
             res.status(200).json(idea);
         } else {
             res.status(404).send('Idea not found');
         }
-        console.log(idea);  // Stampa l'idea per il debug
+        console.log(idea);
     }).catch(err => {
-        console.error(`Error: ${err}`);  // Stampa l'errore per il debug
+        console.error(`Error: ${err}`);
         res.status(500).send(`Internal server error: ${err}`);
     });
 });
+
+
 /**
  * @swagger
  * paths:
@@ -181,6 +184,43 @@ userRouter.get('/user', (req: Request, res: Response) => {
 
     AuthenticationController.getUser().then(user => {
         res.status(200).json(user);
+    }).catch((error) => {
+        res.status(500).send(`Internal server error: ${error}.`);
+    });
+});
+
+/**
+ * @swagger
+ * paths:
+ *   /user/vote:
+ *     get:
+ *       tags:
+ *         - User
+ *       summary: Get user's votes
+ *       description: Retrieves a list of user's voted ideas
+ *       parameters:
+ *         
+ *       responses:
+ *         '200':
+ *           description: Successfully retrieved list of user's votes.
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: array
+ *                 items:
+ *                   - users
+ *         '500':
+ *           description: Internal server error.
+ *           content:
+ *             text/plain:
+ *               schema:
+ *                 type: string
+ *                 example: "Internal server error: {error}."
+*/
+userRouter.get('/vote', (req: Request, res: Response) => {
+
+    LikeController.getUserVote(req).then(votes => {
+        res.status(200).json(votes);
     }).catch((error) => {
         res.status(500).send(`Internal server error: ${error}.`);
     });

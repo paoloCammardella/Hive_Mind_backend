@@ -5,6 +5,7 @@ mongoose.set('strictQuery', false);
 
 
 export interface IdeaInterface {
+  user: string,
   title: string,
   text: string,
   upvote: number,
