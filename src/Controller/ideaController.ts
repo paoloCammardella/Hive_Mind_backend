@@ -44,9 +44,8 @@ export class IdeaController {
   static async getControverisalIdeas(req: Request) {
 
     try {
-      const page = parseInt(req.query.page as string) || 1;
-      const size = parseInt(req.query.size as string) || 10;
-      const skip = (page - 1) * size;
+      const page = parseInt(req.query.page as string) || 0;
+      const skip = page * 10;
 
       const aggregate = [
         {
@@ -61,7 +60,7 @@ export class IdeaController {
           }
         },
         { $skip: skip },
-        { $limit: size }
+        { $limit: 10 }
       ];
 
       const Ideas = await Idea.aggregate(aggregate);
@@ -77,9 +76,9 @@ export class IdeaController {
 
       return {
         content: Ideas,
-        totalPages: Math.ceil(totalIdeas / size),
+        totalPages: Math.ceil(totalIdeas / 10),
         currentPage: page,
-        pageSize: size,
+        pageSize: 10,
         totalElements: totalIdeas
       }
 
@@ -91,15 +90,14 @@ export class IdeaController {
   static async getPopularIdeas(req: Request) {
 //TODO aggiusta qui
     try {
-      const page = parseInt(req.query.page as string) || 1;
-      const size = parseInt(req.query.size as string) || 4;
-      const skip = (page - 1) * size;
+      const page = parseInt(req.query.page as string) || 0;
+      const skip = page * 10;
 
       const aggregate = [
         {
           $match: {
             $expr: {
-              $eq: [
+              $gt: [
                 {
                   $subtract: ['$upvote', '$downvote']
                 }, 0
@@ -108,7 +106,7 @@ export class IdeaController {
           }
         },
         { $skip: skip },
-        { $limit: size }
+        { $limit: 10 }
       ];
 
       const Ideas = await Idea.aggregate(aggregate);
@@ -122,11 +120,13 @@ export class IdeaController {
         }
       });
 
+      console.log(Ideas);
+
       return {
         content: Ideas,
-        totalPages: Math.ceil(totalIdeas / size),
+        totalPages: Math.ceil(totalIdeas / 10),
         currentPage: page,
-        pageSize: size,
+        pageSize: 10,
         totalElements: totalIdeas
       }
 
@@ -137,19 +137,50 @@ export class IdeaController {
 
   static async getUnpopularIdeas(req: Request) {
 
-  const page = parseInt(req.query.page as string, 10) || 1;
-  return await Idea.aggregate([
-    {
-      $match: {
+    try {
+      const page = parseInt(req.query.page as string) || 0;
+      const skip = page * 10;
+
+      const aggregate = [
+        {
+          $match: {
+            $expr: {
+              $lt: [
+                {
+                  $subtract: ['$upvote', '$downvote']
+                }, 0
+              ]
+            }
+          }
+        },
+        { $skip: skip },
+        { $limit: 10 }
+      ];
+
+      const Ideas = await Idea.aggregate(aggregate);
+      const totalIdeas = await Idea.countDocuments({
         $expr: {
           $lt: [
-            { $subtract: ['$upvote', '$downvote'] },
-            0
+            {
+              $subtract: ['$upvote', '$downvote']
+            }, 0
           ]
         }
+      });
+
+      console.log(Ideas);
+
+      return {
+        content: Ideas,
+        totalPages: Math.ceil(totalIdeas / 10),
+        currentPage: page,
+        pageSize: 10,
+        totalElements: totalIdeas
       }
+
+    } catch (err) {
+      console.error(err);
     }
-  ]).skip(page).limit(10).exec();
 }
 
   static async canUserVoteIdea(username: string, idea_id: string) {
