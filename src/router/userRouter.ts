@@ -140,7 +140,7 @@ userRouter.post('/like/idea', ensureUsersDoesntVoteOwnIdeas, (req: Request, res:
     console.log(req.body);
     LikeController.likeIdea(req).then(idea => {
         if (idea) {
-            res.status(200).json(idea);
+            res.status(200).send();
         } else {
             res.status(404).send('Idea not found');
         }
