@@ -4,15 +4,7 @@ import User from '../model/User';
 import Comment from '../model/Comment';
 
 export class IdeaController {
-  static async getComments(req: Request) {
-    try {
-      const page = parseInt(req.query.page as string, 10) || 1;
-      let comments = await Comment.find({ idea_id: req.query.idea_id }).skip(page).limit(5);
-      return comments;
-    } catch (err) {
-      console.error(err);
-    }
-  }
+
 
   static async postNewIdea(req: Request, res: Response) {
     let user = await User.findOne({ username: req.body.user });
@@ -88,7 +80,6 @@ export class IdeaController {
   };
 
   static async getPopularIdeas(req: Request) {
-//TODO aggiusta qui
     try {
       const page = parseInt(req.query.page as string) || 0;
       const skip = page * 10;
@@ -133,7 +124,7 @@ export class IdeaController {
     } catch (err) {
       console.error(err);
     }
-}
+  }
 
   static async getUnpopularIdeas(req: Request) {
 
@@ -181,26 +172,51 @@ export class IdeaController {
     } catch (err) {
       console.error(err);
     }
-}
+  }
 
   static async canUserVoteIdea(username: string, idea_id: string) {
-  const idea = await Idea.findById(idea_id);
-  return idea && idea.user !== username;
-}
-
-  static async commentIdea(req: Request) {
-  try {
-    let ideaCommented = await Idea.findById(req.body.idea_id);
-    if (ideaCommented) {
-      let newComment = new Comment({
-        username: req.body.username,
-        idea_id: req.body.idea_id,
-        text: req.body.text
-      });
-      return await newComment.save()
-    }
-  } catch (err) {
-    console.error(err);
+    const idea = await Idea.findById(idea_id);
+    return idea && idea.user !== username;
   }
-}
+
+  static async getComments(req: Request) {
+    try {
+      const page = parseInt(req.query.page as string, 10) || 1;
+      let comments = await Comment.find({ idea_id: req.query.idea_id }).skip(page).limit(5);
+      console.log(comments);
+      return comments;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  static async commentIdea(req: Request, res: Response) {
+    console.log('Received request:', req.body); // Log per confermare la ricezione dei dati
+  
+    try {
+      if (!req.body.idea_id) {
+        console.log('idea_id is missing');
+        return null;
+      }
+
+      let ideaCommented = await Idea.findById(req.body.idea_id);
+      if (ideaCommented) {
+        console.log('Idea found:', ideaCommented);
+        let newComment = new Comment({
+          username: req.body.username,
+          idea_id: req.body.idea_id,
+          text: req.body.text
+        });
+        let savedComment = await newComment.save();
+        console.log('Comment saved:', savedComment);
+        return savedComment;
+      } else {
+        console.log('Idea not found for id:', req.body.idea_id);
+        return null;
+      }
+    } catch (err) {
+      console.error('Error in commentIdea:', err);
+      throw err; // Rilancia l'errore per la gestione a livello superiore
+    }
+  }
 }

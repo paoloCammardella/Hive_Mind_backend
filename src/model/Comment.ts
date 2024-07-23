@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
 
 export interface CommentInterface {
     username: string,
@@ -21,5 +21,5 @@ const commentSchema = new mongoose.Schema({
     }
 }, { collection: "comments" });
 
-const Comment = mongoose.model("Comment", commentSchema);
+const Comment: Model<CommentInterface> = mongoose.model<CommentInterface>("Comment", commentSchema);
 export default Comment;

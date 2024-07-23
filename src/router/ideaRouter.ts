@@ -129,10 +129,10 @@ ideaRouter.get('/unpopular', (req: Request, res: Response) => {
  *       '500':
  *         description: Internal server error.
  */
-ideaRouter.post('/comment', (req: Request, res: Response) => {
+ideaRouter.get('/comment', (req: Request, res: Response) => {
   IdeaController.getComments(req).then((comments) => {
     if (comments) {
-      return res.status(201).json({ 'message': 'OK' });
+      return res.status(201).json(comments);
     }
     return res.status(400).json({
       "message": `Bad request, no idea commented.`
@@ -178,20 +178,25 @@ ideaRouter.post('/comment', (req: Request, res: Response) => {
  *       '500':
  *         description: Internal server error.
  */
-ideaRouter.post('/comment', (req: Request, res: Response) => {
-  IdeaController.commentIdea(req).then((comment) => {
+ideaRouter.post('/comment', async (req: Request, res: Response) => {
+  try {
+    console.log('Request received at /comment:', req.body);
+    let comment = await IdeaController.commentIdea(req, res);
     if (comment) {
-      return res.status(201).json({ 'message': 'OK' });
+      console.log('Comment text:', req.body.text);
+      return res.status(201).send();
+    } else {
+      console.log('Error: Comment not created');
+      return res.status(400).json({
+        "message": `Bad request, no idea commented.`
+      });
     }
-    return res.status(400).json({
-      "message": `Bad request, no idea commented.`
-    });
-  }).catch((error) => {
-    console.log(error);
+  } catch (error) {
+    console.log('Server error:', error);
     return res.status(500).json({
       "message": `Server error: ${error}.`
     });
-  })
+  }
 });
 
 /**
