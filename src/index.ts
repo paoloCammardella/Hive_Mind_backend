@@ -21,6 +21,7 @@ app.use(cors({
   credentials: true,
   methods: 'POST,GET,PUT,OPTIONS,DELETE'
 }));
+
 //deserialize JSON
 app.use(express.json());
 
