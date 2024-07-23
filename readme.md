@@ -1,6 +1,5 @@
 <a name="readme-top"></a>
 
-[![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 <!-- PROJECT LOGO -->
@@ -103,7 +102,7 @@ This is a universitary project developed for the _Web Technologies_ course. The 
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/paoloCammardella/Hive_Mind_backend.git
+   git clone https://github.com/paoloCammardella/Hive_Mind_frontend.git
    ```
 2. Install the necessary modules
    ```sh
@@ -142,7 +141,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 Back-End: [Hive Mind back-end](https://github.com/paoloCammardella/Hive_Mind_backend.git)
 
-Front-end: [Hive Mind front-end](https://github.com/paoloCammardella/Hive_Mind_backend.git)
+Front-end: [Hive Mind front-end](https://github.com/paoloCammardella/Hive_Mind_frontend.git)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
