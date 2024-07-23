@@ -123,7 +123,7 @@ Make sure to use the .env.template and replace every field with your values.
 To start the project you can run the following command
 
 ```
-npm run
+npm run start
 ```
 
 And then start the front-end application
