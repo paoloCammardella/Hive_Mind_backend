@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import Idea from "../model/Idea";
 import User from '../model/User';
 import Comment from '../model/Comment';
+import mongoose from 'mongoose';
 
 export class IdeaController {
 
@@ -181,8 +182,10 @@ export class IdeaController {
 
   static async getComments(req: Request) {
     try {
-      const page = parseInt(req.query.page as string, 10) || 1;
-      let comments = await Comment.find({ idea_id: req.query.idea_id }).skip(page).limit(5);
+      const commentRange = parseInt(req.query.commentRange as string, 10) || 0;
+      const objectId = new mongoose.Types.ObjectId(req.query.idea_id as string);
+
+      let comments = await Comment.find({ idea_id: objectId }).skip(0).limit(commentRange);
       console.log(comments);
       return comments;
     } catch (err) {
@@ -191,17 +194,9 @@ export class IdeaController {
   }
 
   static async commentIdea(req: Request, res: Response) {
-    console.log('Received request:', req.body); // Log per confermare la ricezione dei dati
-  
     try {
-      if (!req.body.idea_id) {
-        console.log('idea_id is missing');
-        return null;
-      }
-
       let ideaCommented = await Idea.findById(req.body.idea_id);
       if (ideaCommented) {
-        console.log('Idea found:', ideaCommented);
         let newComment = new Comment({
           username: req.body.username,
           idea_id: req.body.idea_id,
@@ -210,9 +205,6 @@ export class IdeaController {
         let savedComment = await newComment.save();
         console.log('Comment saved:', savedComment);
         return savedComment;
-      } else {
-        console.log('Idea not found for id:', req.body.idea_id);
-        return null;
       }
     } catch (err) {
       console.error('Error in commentIdea:', err);
