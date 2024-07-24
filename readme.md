@@ -119,19 +119,20 @@ Make sure to use the .env.template and replace every field with your values.
 
 ## Usage
 
-To start the project you can run the following command
+To start the project you can run the following commands:
+### Back-end
 
-```
-npm run start
-```
+  1. 
+    npm run build
 
-And then start the front-end application
+  2. 
 
-```
-ng s --o
-```
+    npm start
+### Front-end
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+  ```
+  ng s --o
+  ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

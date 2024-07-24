@@ -48,3 +48,5 @@ web_modules/
 
 # .js files complied via TSC
 .js
+
+dist/
