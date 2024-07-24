@@ -80,7 +80,12 @@ This is a universitary project developed for the _Web Technologies_ course. The 
   ```
   docker pull mongo:latest
 
-  docker run -d -p 27017:27017 --name=<CONTAINER-NAME> mongo:latest
+  docker run -d \
+    -e MONGO_INITDB_ROOT_USERNAME=<YOUR_USERNAME> \
+    -e MONGO_INITDB_ROOT_PASSWORD=<YOUR_PASSWORD> \
+    -p 27017:27017 \
+    --name <YOUR_MONGO_CONTAINER> \
+    mongo:latest
   ```
 
 - Install _NodeJS_ and npm (you can follow <a href="https://monovm.com/blog/install-npm-on-ubuntu/#Install-Node.js-and-npm-from-the-Ubuntu">this link</a>).
