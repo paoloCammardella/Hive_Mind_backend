@@ -12,7 +12,7 @@
 <h3 align="center">Hive Mind</h3>
 
   <p align="center">
-    Hive mind is a social media where you can feel free to share your idea and let other people vote for it. Will people agree with it or will they totaly disagree?
+    Hive mind is a social media where you can feel free to share your idea and let other people vote for it. Will people agree with it or will they totally disagree?
     <br />
     <a href="https://github.com/paoloCammardella/Hive_Mind_backend.git"><strong>Explore the docs »</strong></a>
     <br />
@@ -53,14 +53,8 @@ This is a universitary project developed for the _Web Technologies_ course. The 
 
 ### Built With
 
-- [![JWT][JWT]][JWT-url]
-- [![Express][ExpressJS]][ExpressJS-url]
-- [![NODEJS][NODEJS]][NODEJS-url]
-- [![MongoDB][MongoDB]][MongoDB-url]
-- [![Swagger][Swagger]][Swagger-url]
-- [![Angular][Angular.io]][Angular-url]
-- [![TypeScript][TypeScript]][TypeScript-url]
-- [![Docker][Docker]][Docker-url]
+[![JWT][JWT]][JWT-url] [![Express][ExpressJS]][ExpressJS-url] [![NODEJS][NODEJS]][NODEJS-url] [![MongoDB][MongoDB]][MongoDB-url]
+[![Swagger][Swagger]][Swagger-url] [![Angular][Angular.io]][Angular-url] [![TypeScript][TypeScript]][TypeScript-url] [![Docker][Docker]][Docker-url]
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
